@@ -1,0 +1,10 @@
+input[type="checkbox"] {
+    display: none;
+}
+.matching-password, .password-pattern {
+    font-size: smaller;
+}
+#upper:checked + label, #lower:checked + label, #special-character:checked + label,
+#number:checked + label, #length:checked + label{
+    display: none;
+}

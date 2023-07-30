@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="{{ url_for('static', filename='css.css') }}">
+        <script type="text/javascript" src="{{ url_for('static', filename='javascript.js')}}"></script>
+        <title> {{ title }}</title>
+        {% block head %}
+
+        {% endblock %}
+    </head>
+    <body>
+        {% block header %}
+        <header></header>
+        {% endblock %}
+        {% block main %}
+        {% endblock %}
+    </body>
+</html>
