@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError
 # import logging
 # from flask_mail import Mail, Message
 import random
+import secrets
 import string
 
 app = Flask(__name__)
@@ -54,15 +55,15 @@ def login():
 
 @app.route("/signup", methods=['POST', 'GET'])
 def signup():
+    characters = list(string.ascii_letters + string.digits)
+    token = ''.join(secrets.choice(characters)for _ in range(16))
     if request.method == "POST":
         f_name = request.form['f-name']
         s_name = request.form['s-name']
         email = request.form['email']
         password = request.form['password']
         password2 = request.form['password2']
-        characters = list(string.ascii_letters + string.digits)
-        random.shuffle(characters)
-        salt = "".join(characters)
+        salt = ''.join(secrets.choice(characters) for _ in range(24))
 
         if len(f_name) > 0 and len(s_name) > 0 and len(email) > 0 and \
             len(password) > 0 and len(password2) > 0:
