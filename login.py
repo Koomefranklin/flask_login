@@ -10,7 +10,7 @@ import string
 
 app = Flask(__name__)
 app.secret_key = "secretKey"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///attendance.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///login.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.permanent_session_lifetime = datetime.timedelta(minutes=5)
 db = SQLAlchemy(app)
@@ -42,7 +42,7 @@ def login():
         user_salt = user.salt
         saltedSecret = password + user_salt
         if sha256_crypt.verify(saltedSecret, user.password):
-            session['user'] = user
+            session['user'] = user.email
             flash("Login Successfull")
             return redirect(url_for('home'))
         else:
@@ -60,7 +60,9 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         password2 = request.form['password2']
-        salt = random.shuffle(list(string.ascii_letters + string.digits))
+        characters = list(string.ascii_letters + string.digits)
+        random.shuffle(characters)
+        salt = "".join(characters)
 
         if len(f_name) > 0 and len(s_name) > 0 and len(email) > 0 and \
             len(password) > 0 and len(password2) > 0:
@@ -82,7 +84,13 @@ def signup():
 
 @app.route("/")
 def home():
-    return render_template("index.html", title="HomePage")
+    try:
+        user = session['user']
+        if Login.query.filter(Login.email == user):
+            return render_template("index.html", title="HomePage")
+    except:
+        flash("You'll need to login first")
+        return redirect(url_for('login'))
 
 
 @app.errorhandler(404)
@@ -91,6 +99,6 @@ def page_not_found(error):
 
 
 if __name__ == "__main__":
-    with app.app_context:
+    with app.app_context():
         db.create_all()
-    app.run(debug=True)
+        app.run(debug=True)
