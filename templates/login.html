@@ -6,6 +6,7 @@
 {% block main %}
 <div>
     <form action="#" method="post">
+        <input type="text" name="token" value="{{ token }}" hidden>
         <label for="email">Email</label>
         <input type="email" name="email" id="email">
         <label for="password">Password</label>

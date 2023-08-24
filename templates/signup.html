@@ -6,7 +6,7 @@
 {% block main %}
 <div>
     <form action="#" method="post">
-        <!-- <input type="text" name="token" value="{{ token }}"> -->
+        <input type="text" name="token" value="{{ token }}" hidden>
         <label for="f-name">First Name</label>
         <input type="text" name="f-name" id="f-name">
         <label for="s-name">Sir Name</label>
@@ -48,7 +48,7 @@
             Passwords don't match
         </span>
     </div>
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
     </form>
     Already have an account? <a href="{{ url_for('login') }}">Login</a>
 </div>

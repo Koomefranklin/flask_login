@@ -5,7 +5,6 @@ from passlib.hash import sha256_crypt
 from sqlalchemy.exc import IntegrityError
 # import logging
 # from flask_mail import Mail, Message
-import random
 import secrets
 import string
 
@@ -38,49 +37,72 @@ def login():
     if request.method == "POST":
         email = request.form['email']
         password = request.form['password']
+        receivedToken = request.form['token']
 
-        user = Login.query.filter(Login.email == email).first()
-        user_salt = user.salt
-        saltedSecret = password + user_salt
-        if sha256_crypt.verify(saltedSecret, user.password):
-            session['user'] = user.email
-            flash("Login Successfull")
-            return redirect(url_for('home'))
+        if session['token'] == receivedToken:
+
+            user = Login.query.filter(Login.email == email).first()
+            user_salt = user.salt
+            saltedSecret = password + user_salt
+            if sha256_crypt.verify(saltedSecret, user.password):
+                session.pop('token', None)
+                session['user'] = user.email
+                flash("Login Successfull")
+                return redirect(url_for('home'))
+            else:
+                flash("Wrong email or password")
+                return redirect(url_for("login"))
         else:
-            flash("Wrong email or password")
-            return render_template("login.html", title="Login")
+            flash("Time out try again!")
+            return redirect(url_for("login"))
     else:
-        return render_template("login.html", title="Login")
+        characters = list(string.ascii_letters + string.digits)
+        token = ''.join(secrets.choice(characters)for _ in range(16))
+        session['token'] = token
+        return render_template("login.html", title="Login", token=token)
 
 
 @app.route("/signup", methods=['POST', 'GET'])
 def signup():
     characters = list(string.ascii_letters + string.digits)
-    token = ''.join(secrets.choice(characters)for _ in range(16))
     if request.method == "POST":
+        receivedToken = request.form['token']
         f_name = request.form['f-name']
         s_name = request.form['s-name']
         email = request.form['email']
         password = request.form['password']
         password2 = request.form['password2']
         salt = ''.join(secrets.choice(characters) for _ in range(24))
-
-        if len(f_name) > 0 and len(s_name) > 0 and len(email) > 0 and \
-            len(password) > 0 and len(password2) > 0:
-            if password2 == password:
-                salted_password = password + salt
-                hashed_password = sha256_crypt.hash(salted_password)
-                newUser = Login(f_name, s_name, email, hashed_password, salt)
-                db.session.add(newUser)
-                db.session.commit()
-
-                flash("User Registered Sussessfully! Login")
-                return redirect(url_for("login"))
+        if session['token'] and session['token'] == receivedToken:
+            if len(f_name) > 0 and len(s_name) > 0 and len(email) > 0 and \
+                len(password) > 0 and len(password2) > 0:
+                if password2 == password:
+                    salted_password = password + salt
+                    hashed_password = sha256_crypt.hash(salted_password)
+                    newUser = Login(f_name, s_name, email, hashed_password, salt)
+                    try:
+                        db.session.add(newUser)
+                        db.session.commit()
+                        session.pop('token', None)
+                        flash("User Registered Sussessfully! Login")
+                        return redirect(url_for("login"))
+                    except IntegrityError:
+                        flash('Email already used!')
+                        return redirect(url_for('signup'))
+                    
+                else:
+                    flash("Passwords do not match!")
+                    return redirect(url_for("signup"))
             else:
-                flash("Passwords do not match!")
-                return render_template("signup.html", title="Signup")
+                flash("All Fields are Required!")
+                return redirect(url_for("signup"))
+        else:
+            flash("Try Again")
+            return redirect(url_for("signup"))
     else:
-        return render_template("signup.html", title="Signup")
+        token = ''.join(secrets.choice(characters)for _ in range(16))
+        session['token'] = token
+        return render_template("signup.html", title="Signup", token=token)
 
 
 @app.route("/")
@@ -92,6 +114,12 @@ def home():
     except:
         flash("You'll need to login first")
         return redirect(url_for('login'))
+
+
+@app.route("/logout")
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('login'))
 
 
 @app.errorhandler(404)
