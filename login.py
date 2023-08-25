@@ -105,13 +105,11 @@ def signup():
         return render_template("signup.html", title="Signup", token=token)
 
 
-@app.route("/", methods=["POST", "GET"])
+@app.route("/")
 def home():
     try:
         user = session['user']
         if Login.query.filter(Login.email == user):
-            if request.method == "POST":
-                flash("Test text!")
             return render_template("index.html", title="HomePage")
     except:
         flash("You'll need to login first")

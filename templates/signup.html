@@ -4,24 +4,25 @@
 {% block header %}
 {% endblock %}
 {% block main %}
-
-     <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="#" method="post">
+<div class="grid place-content-center my-20">
+    <div class="w-96">
+     <form class="bg-gray-600 shadow-md rounded px-8 pt-6 pb-8 mb-4 col-2" action="#" method="post">
         <input type="text" name="token" value="{{ token }}" hidden>
         <div class="mb-4">
-            <label for="f-name" class="block text-gray-700 text-sm font-bold mb-2">First Name</label>
-            <input type="text" name="f-name" id="f-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <label for="f-name" class="block text-white text-sm font-bold mb-2">First Name</label>
+            <input type="text" name="f-name" id="f-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline">
         </div>
         <div class="mb-4">
-            <label for="s-name" class="block text-gray-700 text-sm font-bold mb-2">Sir Name</label>
-            <input type="text" name="s-name" id="s-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <label for="s-name" class="block text-white text-sm font-bold mb-2">Sir Name</label>
+            <input type="text" name="s-name" id="s-name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline">
         </div>
         <div class="mb-4">
-            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-            <input type="email" name="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <label for="email" class="block text-white text-sm font-bold mb-2">Email</label>
+            <input type="email" name="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline">
         </div>
         <div class="mb-4">
-            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-            <input type="password" name="password" id="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <label for="password" class="block text-white text-sm font-bold mb-2">Password</label>
+            <input type="password" name="password" id="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline">
             <div class="input-group-append">
             <span class="input-group-text" onclick="password_show_hide()">
               <i class="fas fa-eye" id="show_eye"></i>
@@ -30,7 +31,7 @@
             </div>
             <span id="password-pattern" class="password-pattern" hidden="hidden">
                 <input type="checkbox" id="upper" disabled readonly>
-                <label for="upper">Contains at least 1 upper-case character</label>
+                <label for="upper" class="text-sm">Contains at least 1 upper-case character</label>
                 <input type="checkbox" id="lower" disabled readonly>
                 <label for="lower">Contains at least 1 lower-case character</label>
                 <input type="checkbox" id="special-character" disabled readonly>
@@ -42,8 +43,8 @@
             </span>
         </div>
         <div class="mb-4">
-            <label for="password2" class="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
-            <input type="password" id="password2" name="password2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <label for="password2" class="block text-white text-sm font-bold mb-2">Confirm Password</label>
+            <input type="password" id="password2" name="password2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline">
             <div class="input-group-append">
                 <span class="input-group-text" onclick="password2_show_hide()">
                 <i class="fas fa-eye" id="show_eye2"></i>
@@ -57,5 +58,6 @@
         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Register</button>
     </form>
     Already have an account? <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="{{ url_for('login') }}">Login</a>
-
+    </div>
+</div>
 {% endblock %}
