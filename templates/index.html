@@ -1,4 +1,10 @@
 {% extends "base.html" %}
 {% block main %}
+<a href="{{ url_for('logout') }}">Logout</a>
+<div>
 <h1>You have successfully logged in!</h1>
+<form class="max-w-xs" method="post">
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Test</button>
+</form>
+</div>
 {% endblock %}

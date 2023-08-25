@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.secret_key = "secretKey"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///login.sqlite3'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.permanent_session_lifetime = datetime.timedelta(minutes=5)
+app.permanent_session_lifetime = datetime.timedelta(minutes=50)
 db = SQLAlchemy(app)
 
 
@@ -105,11 +105,13 @@ def signup():
         return render_template("signup.html", title="Signup", token=token)
 
 
-@app.route("/")
+@app.route("/", methods=["POST", "GET"])
 def home():
     try:
         user = session['user']
         if Login.query.filter(Login.email == user):
+            if request.method == "POST":
+                flash("Test text!")
             return render_template("index.html", title="HomePage")
     except:
         flash("You'll need to login first")
