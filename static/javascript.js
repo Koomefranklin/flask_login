@@ -2,7 +2,7 @@ function password_show_hide() {
     const password = document.getElementById("password");
     const show_eye = document.getElementById("show_eye");
     const hide_eye = document.getElementById("hide_eye");
-    hide_eye.classList.remove("d-none");
+    hide_eye.classList.remove("hidden");
     if (password.type === "password") {
     password.type = "text";
     show_eye.style.display = "none";
@@ -19,7 +19,7 @@ function password2_show_hide() {
     const password = document.getElementById("password2");
     const show_eye = document.getElementById("show_eye2");
     const hide_eye = document.getElementById("hide_eye2");
-    hide_eye.classList.remove("d-none");
+    hide_eye.classList.remove("hidden");
     if (password.type === "password") {
     password.type = "text";
     show_eye.style.display = "none";
@@ -58,7 +58,8 @@ function check_passwords () {
                 allChecked = false;
             }
         });
-        confirmed.disabled = pattern.hidden = !allChecked;
+        confirmed.disabled = !allChecked;
+        pattern.hidden = allChecked;
     });
 
 
@@ -67,7 +68,8 @@ function check_passwords () {
     confirmed.addEventListener('input', checkValues);
 
     function checkValues() {
-        pattern.hidden = false;
+        pattern.classList.remove("hidden");
+        unmatched.classList.remove("hidden");
         const primaryValue = password.value;
         const secondaryValue = confirmed.value;
         if (primaryValue === secondaryValue){

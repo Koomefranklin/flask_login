@@ -2,14 +2,16 @@
 <html>
     <head>
         <link rel="stylesheet", href="{{url_for('static', filename='css/main.css')}}">
-        <link rel="{{ url_for('static', filename='css.css') }}">
-        <script type="text/javascript" src="{{ url_for('static', filename='javascript.js')}}"></script>
+        <!-- <link rel="{{ url_for('static', filename='css.css') }}"> -->
+        <script type="text/javascript" src="{{ url_for('static', filename='javascript.js') }}"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <title> {{ title }}</title>
         {% block head %}
 
         {% endblock %}
     </head>
     <body class="bg-gray-900 text-white">
+        <script>password_show_hide()</script>
         <div class="mx-2">
         {% block header %}
         <header></header>
