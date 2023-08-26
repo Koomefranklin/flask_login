@@ -58,7 +58,7 @@ function check_passwords () {
                 allChecked = false;
             }
         });
-        confirmed.disabled = !allChecked;
+        // confirmed.disabled = !allChecked;
         pattern.hidden = allChecked;
     });
 

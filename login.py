@@ -3,10 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request, redirect, url_for, flash, render_template, session
 from passlib.hash import sha256_crypt
 from sqlalchemy.exc import IntegrityError
-# import logging
-# from flask_mail import Mail, Message
 import secrets
 import string
+import re
 
 app = Flask(__name__)
 app.secret_key = "secretKey"
@@ -31,6 +30,24 @@ class Login(db.Model):
         self.password = password
         self.salt = salt
     
+
+def passwordValidation(password):
+    lowercase_regex = r'[a-z]'
+    uppercase_regex = r'[A-Z]'
+    digit_regex = r'\d'
+    special_chars_regex = r'[!@#$%^&*()_+=-]'
+    length_regex = r'^.{8,}$'
+    
+    conditions = [
+    bool(re.search(lowercase_regex, password)),
+    bool(re.search(uppercase_regex, password)),
+    bool(re.search(digit_regex, password)),
+    bool(re.search(special_chars_regex, password)),
+    bool(re.search(length_regex, password))
+    ]
+
+    return all(conditions)
+
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
@@ -77,17 +94,21 @@ def signup():
             if len(f_name) > 0 and len(s_name) > 0 and len(email) > 0 and \
                 len(password) > 0 and len(password2) > 0:
                 if password2 == password:
-                    salted_password = password + salt
-                    hashed_password = sha256_crypt.hash(salted_password)
-                    newUser = Login(f_name, s_name, email, hashed_password, salt)
-                    try:
-                        db.session.add(newUser)
-                        db.session.commit()
-                        session.pop('token', None)
-                        flash("User Registered Sussessfully! Login")
-                        return redirect(url_for("login"))
-                    except IntegrityError:
-                        flash('Email already used!')
+                    if passwordValidation(password):
+                        salted_password = password + salt
+                        hashed_password = sha256_crypt.hash(salted_password)
+                        newUser = Login(f_name, s_name, email, hashed_password, salt)
+                        try:
+                            db.session.add(newUser)
+                            db.session.commit()
+                            session.pop('token', None)
+                            flash("User Registered Sussessfully! Login")
+                            return redirect(url_for("login"))
+                        except IntegrityError:
+                            flash('Email already used!')
+                            return redirect(url_for('signup'))
+                    else:
+                        flash("Password criterion not met!")
                         return redirect(url_for('signup'))
                     
                 else:
